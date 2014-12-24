@@ -38,8 +38,9 @@ def upload():
 
 def extract_file(name):
     """TODO: Insert assertions for error handling."""
-    zipF = zipfile.ZipFile(os.path.join(UPLOAD_DEST, name))
-    zipF.extractall(os.path.join(UPLOAD_DEST, 'extracted_data'))
+    with zipfile.ZipFile(os.path.join(UPLOAD_DEST, name)) as zipF:
+        zipF.extractall(os.path.join(UPLOAD_DEST, 'extracted_data'))
+
 
 if __name__ == "__main__":
     app.run('localhost', 5000, True)
