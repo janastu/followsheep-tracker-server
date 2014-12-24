@@ -6,15 +6,14 @@ import os
 import zipfile
 
 
-SECRET_KEY = 'ajskbbcsdcudcusdvivaisciwef7t0239er9238reywoedhs'
 app = Flask(__name__)
-app.config.from_object(__name__)
+app.config.from_pyfile('config.py')
 
 uploaded_files = UploadSet('tracks', ARCHIVES,
                            default_dest=lambda app: app.instance_path)
 configure_uploads(app, uploaded_files)
 
-UPLOAD_DEST = os.path.join(os.path.abspath(__file__).rsplit('/', 1)[0],
+UPLOAD_DEST = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                            'static/data')
 uploaded_files._config = UploadConfiguration(UPLOAD_DEST)
 
