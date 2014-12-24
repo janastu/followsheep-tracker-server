@@ -1,0 +1,5 @@
+A python appliction to upload GPS tracks and view the tracks on a map.
+
+* Requirements
+  - Flask
+  - Flask-uploads
