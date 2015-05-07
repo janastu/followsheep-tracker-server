@@ -3,3 +3,12 @@ A python appliction to upload GPS tracks and view the tracks on a map.
 * Requirements
   - Flask
   - Flask-uploads
+  - pymongo
+
+Upload a zip file containing a config.json, track file and media files related
+to the track. The uploaded file is then extracted and saved in a database.
+The files can be indexed by a engine which supports spatial dataset for making
+spatial queries.
+
+The file can be uploaded by sending a *POST* request to */upload*.
+The file must be a sent as a value to key of *track* in the request body.
