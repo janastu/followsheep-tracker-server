@@ -1,8 +1,20 @@
 #map {
-    width: 50vw;
     height: 40vw;
 }
 
 #content {
     margin-top: 6vw;
+}
+
+#tracks-list>li {
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+#tracks-list {
+  padding-left: 0px;
+}
+
+.img-responsive {
+  height: 13vw;
 }

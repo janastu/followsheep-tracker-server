@@ -25,8 +25,7 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def index():
-    print os.path.abspath(__file__)
-    return render_template('index.html')
+    return render_template('index.html', tracks=get_all_tracks())
 
 
 @app.route('/upload', methods=['POST', 'GET'])
@@ -47,9 +46,9 @@ def extract_file(name):
     with zipfile.ZipFile(os.path.join(UPLOAD_DEST, name)) as zipF:
         with zipF.open('config.json') as f:
             config = json.load(f)
-        print config.get('User')
-        zipF.extractall(os.path.join(UPLOAD_DEST, 'extracted_data',
-                                     config.get('User')))
+            zipF.extractall(os.path.join(UPLOAD_DEST, 'extracted_data',
+                                         config.get('Device ID'),
+                                         config.get('User')))
         for files in zipF.infolist():
             if files.filename.endswith(".gpx"):
                 with zipF.open(files) as f:
@@ -57,6 +56,7 @@ def extract_file(name):
                                   os.path.join(UPLOAD_DEST, files.filename +
                                                '.json'),
                                   os.path.join(UPLOAD_DEST, 'extracted_data',
+                                               config.get('Device ID'),
                                                config.get('User'),
                                                files.filename)])
                     filename = os.path.join(UPLOAD_DEST, files.filename +
@@ -64,5 +64,18 @@ def extract_file(name):
                     with open(filename) as jsonFile:
                         config['track'] = json.load(jsonFile)
                     os.remove(filename)
+                config['track-name'] = files.filename.rstrip('.gpx')
     mongo.db.tracks.save(config)
     return True
+
+
+def get_all_tracks():
+    tracks = [track for track in mongo.db.tracks.find()]
+    for track in tracks:
+        track['id'] = str(track['_id'])
+        track['device_ID'] = track['Device ID']
+        track['track_name'] = track['track-name']
+        del(track['_id'])
+        del(track['Device ID'])
+        del(track['track-name'])
+    return tracks
