@@ -33,7 +33,7 @@ def upload():
         filename = uploaded_files.save(request.files.get('track'))
         extract_file(filename)
         flash('Your upload was successful.')
-        return redirect(url_for('upload'))
+        return redirect(url_for('index'))
     return render_template('upload.html')
 
 

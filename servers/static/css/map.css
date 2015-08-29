@@ -1,5 +1,7 @@
 #map {
-    height: 40vw;
+    height: 100vh;
+    top:-32px;
+    margin-left:15px;
 }
 
 #content {
@@ -18,3 +20,107 @@
 .img-responsive {
   height: 13vw;
 }
+
+.upload-flash {
+    position:fixed;
+    top:50px;
+    z-index: 100;
+    width:300px;
+}
+
+
+
+/*side menu for Tracks list*/
+
+.side-menu-heading {
+    margin-left:15px;
+}
+.side-menu-heading h3 {
+    margin: 0 auto;
+}
+.sidebar-wrapper {
+    /*transform*/
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    margin-right: -250px;
+    right: 5px;
+    margin-top: 50px;
+    width: 270px;
+    background: rgba(240, 240, 240, 0.5);
+    position: fixed;
+    height: 100vh;
+    -ms-overflow-y: auto;
+    overflow-y: auto;
+    z-index: 10000;
+    -webkit-transition: all .4s ease 0s;
+    -moz-transition: all .4s ease 0s;
+    -o-transition: all .4s ease 0s;
+    -ms-transition: all .4s ease 0s;
+    transition: all .4s ease 0s;
+    box-shadow: 1px 1px 1px #262525;
+    border-left: none;
+    padding-right: 5px;
+    padding-left: 10px;
+}
+
+@media (max-width:767px) {
+    .wrapper {
+        padding-left: 70px;
+    }
+    .sidebar-wrapper {
+        /*left: 70px;*/
+    }
+
+    .wrapper.active .container{
+        padding-left: 150px;
+    }
+
+    .wrapper.active .sidebar-wrapper {
+        right: 150px;
+    }
+
+}
+@media (max-width:450px) {
+    .thumbnail {
+        height: 350px;
+    }
+
+    .caption_heading {
+        height: 100px;
+    }
+
+}
+    .wrapper.active {
+        padding-left: 0px;
+        border-right:2px solid #000;
+        margin-left:90px;
+    }
+
+    .wrapper.active .sidebar-wrapper {
+        right: 250px;
+        /*border-right:4px solid #727272;*/
+    }
+
+    .menu-toggle .glyphicon{
+        margin-left:-7px;
+        color:#000;
+        font-size: 20px;
+    }
+#tracks-list-container {
+    padding:15px;
+}
+#tracks-list>li {
+    text-decoration: none;
+}
+#tracks-list>li:hover {
+    text-decoration : underline;
+}
+#tracks-list>li:active {
+    text-decoration: underline;
+}
+
+/* ------------- side menu end ----------- */
+

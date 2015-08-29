@@ -4,13 +4,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="{{url_for('static',
+                           filename='css/bootstrap.min.css')}}"
+    type="text/css" media="screen">
+    <link rel="stylesheet" href="{{url_for('static',
+    filename='js/lib/leaflet-0.7.3/leaflet.css')}}" />
     <link rel="stylesheet" href="{{url_for('static', filename='css/map.css')}}" type="text/css" media="screen" />
   </head>
-  <body class="container">
+  <body>
     <nav class="navbar navbar-inverse navbar-fixed-top row" role="navigation">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -20,35 +23,95 @@
           </button>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/" data-toggle="tooltip"
-                                  title="See tracks" data-placement="bottom" >Home</a></li>
-            <li><a href="upload" data-toggle="tooltip"
-                   title="Upload tracks" data-placement="bottom" >Upload</a></li>
-          </ul>
+            <a href="/" data-toggle="tooltip"
+                        title="See tracks"
+                        data-placement="bottom" ><img
+                        src="static/images/logo.png"
+                        alt="sheep-logo"  style="width:auto;
+                        height:45px; padding:5px;"/></a>
+            <!-- Single button -->
+            <div class="btn-group">
+                <button type="button" class="btn 
+                dropdown-toggle" data-toggle="dropdown"
+                                 aria-haspopup="true"
+                                 aria-expanded="false"
+                                 style="background-color:transparent;
+                                 color:#fff;">
+                    Upload <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li> <div style="padding:15px;">    <h4>Select a file from your computer</h4>
+                            <form method="POST" role="form" enctype="multipart/form-data" action="{{url_for('upload')}}">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <input type="file" name="track" class="form-control">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-    <div id="content" class="row">
-      <div id="tracks-list-container" class="col-md-4 col-lg-4 col-xs-4">
-        <div class="well">
-          <ul id="tracks-list">
-          </ul>
+    <div class="row clearfix">
+        <div class="upload-flash center-block"
+             >
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
         </div>
-      </div>
-      <div id="map" class="col-md-8 col-lg-8 col-xs-8">
+    </div>
+    <div class="wrapper">
+        <div class="sidebar-wrapper">
+            <div class="row">
+                <div class="side-menu-heading">
+                    <a class="menu-toggle" href="#">
+                        <span class="glyphicon glyphicon-align-justify
+                        "></span>
+                    </a>
+                    <h3 class="text-center">Tracks</h3>
+                </div>
+
+            </div>
+            <div class="row">
+                <div id="tracks-list-container">
+                    <ul class="list-groupp" id="tracks-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="content" class="row">
+      <div id="map" class="">
       </div>
     </div>
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="//underscorejs.org/underscore.js"></script>
-    <script type="text/javascript" src="//backbonejs.org/backbone-min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/lib/togeojson.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/leaflet-0.7.3/leaflet.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',
+    filename='js/lib/jquery-1.11.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/lib/underscore-min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',
+    filename='js/lib/backbone-min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/lib/togeojson.js') }}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/maps.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/tracks.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/tracks.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static',
+    filename='js/lib/bootstrap.min.js') }}"></script>
     <script type="text/template" id="tracks-template">
-      <li id=<%= id%>><%= User %>:<%= track_name %></li>
+      <li class="list-group-item" id=<%= id%>><%= User %>:<%=new Date(
+      track_name.split('_')[0]).toDateString() %></li>
     </script>
 
     <script type="text/javascript">

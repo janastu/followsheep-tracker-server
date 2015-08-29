@@ -5,4 +5,10 @@ window.App = window.App || {};
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(App.map);
 
+  //side menu
+  $(".menu-toggle").click(function(e) {
+      e.preventDefault();
+      $(".wrapper").toggleClass("active");
+  });
+
 })(window.L, window.App);
