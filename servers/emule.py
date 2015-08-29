@@ -7,7 +7,6 @@ from flask.ext.pymongo import PyMongo
 import json
 import os
 import zipfile
-# import ogr2ogr
 
 app = create_app()
 
