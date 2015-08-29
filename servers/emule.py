@@ -1,13 +1,13 @@
 from app import create_app
 from flask import (render_template, request, redirect,
-                   url_for, flash)
+                   url_for, flash, make_response)
 from flaskext.uploads import (UploadSet, configure_uploads, ARCHIVES,
                               UploadConfiguration)
 from flask.ext.pymongo import PyMongo
 import json
 import os
 import zipfile
-import ogr2ogr
+# import ogr2ogr
 
 app = create_app()
 
@@ -51,19 +51,13 @@ def extract_file(name):
                                          config.get('User')))
         for files in zipF.infolist():
             if files.filename.endswith(".gpx"):
-                with zipF.open(files) as f:
-                    ogr2ogr.main(['', '-skipfailures', '-f', 'GeoJSON',
-                                  os.path.join(UPLOAD_DEST, files.filename +
-                                               '.json'),
-                                  os.path.join(UPLOAD_DEST, 'extracted_data',
-                                               config.get('Device ID'),
-                                               config.get('User'),
-                                               files.filename)])
-                    filename = os.path.join(UPLOAD_DEST, files.filename +
-                                            '.json')
-                    with open(filename) as jsonFile:
-                        config['track'] = json.load(jsonFile)
-                    os.remove(filename)
+                url = url_for('static',
+                              filename=os.path.join('data',
+                                                    'extracted_data',
+                                                    config.get('Device ID'),
+                                                    config.get('User'),
+                                                    files.filename))
+                config['track-path'] = url
                 config['track-name'] = files.filename.rstrip('.gpx')
     mongo.db.tracks.save(config)
     return True
@@ -79,3 +73,11 @@ def get_all_tracks():
         del(track['Device ID'])
         del(track['track-name'])
     return tracks
+
+
+@app.route('/track/<ObjectId:id>', methods=["POST"])
+def uploadTrack(id):
+    mongo.db.tracks.update({'_id': id}, {'$set': {
+        'track': json.loads(request.form.get('track'))}})
+    response = make_response()
+    return response
