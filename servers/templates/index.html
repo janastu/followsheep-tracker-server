@@ -110,7 +110,7 @@
     <script type="text/javascript" src="{{url_for('static',
     filename='js/lib/bootstrap.min.js') }}"></script>
     <script type="text/template" id="tracks-template">
-      <li class="list-group-item" id=<%= id%>><%= User %>:<%=new Date(
+      <li class="list-group-item" id=<%= id%>><%= User %> on <%=new Date(
       track_name.split('_')[0]).toDateString() %></li>
     </script>
 
