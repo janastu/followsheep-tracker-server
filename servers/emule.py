@@ -1,6 +1,6 @@
 from app import create_app
 from flask import (render_template, request, redirect,
-                   url_for, flash, make_response)
+                   url_for, flash, make_response, send_from_directory)
 from flaskext.uploads import (UploadSet, configure_uploads, ARCHIVES,
                               UploadConfiguration)
 from flask.ext.pymongo import PyMongo
@@ -75,8 +75,14 @@ def get_all_tracks():
 
 
 @app.route('/track/<ObjectId:id>', methods=["POST"])
-def uploadTrack(id):
+def upload_track(id):
     mongo.db.tracks.update({'_id': id}, {'$set': {
         'track': json.loads(request.form.get('track'))}})
     response = make_response()
     return response
+
+
+@app.route('/static/<path:filename>')
+def serve_gpx(filename):
+    return send_from_directory(app.static_folder, filename,
+                               mimetype="application/gpx+xml")
