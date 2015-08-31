@@ -40,14 +40,15 @@
                                  aria-expanded="false"
                                  style="background-color:transparent;
                                  color:#fff; padding:11px;">
-                    Upload <span class="caret"></span>
+                    Upload Track <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li> <div style="padding:15px;">    <h4>Select a file from your computer</h4>
+                    <li> <div style="padding:15px;">    <h4>Select a
+                                .zip file from your computer</h4>
                             <form method="POST" role="form" enctype="multipart/form-data" action="{{url_for('upload')}}">
                                 <div class="form-inline">
                                     <div class="form-group">
-                                        <input type="file" name="track" class="form-control">
+                                        <input type="file" accept=".zip" name="track" class="form-control">
                                     </div>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
@@ -56,13 +57,11 @@
                     </li>
                 </ul>
             </div>
-                <div class="pull-right">
-                <button type="button" class="btn" style="background-color:transparent;
-                                 color:#fff; padding: 11px;">
-                    <a style="color:#fff; text-decoration: none;"
+                <div class="pull-right" style="padding:11px;">
+                    <a style="color:#fff; text-decoration: none;
+                      "
                     href="http://janastu.org/apps/baaapp/userdoc.html"
-                    />Documentation</a>
-                </button>
+                    >Documentation</a>
                 </div>
 
         </div><!--/.nav-collapse -->
