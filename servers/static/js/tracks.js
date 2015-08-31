@@ -71,7 +71,7 @@ window.App = window.App || {};
            case 'Voice recording':
              layer.bindPopup("<audio controls='controls' src='static/data/extracted_data/" +
                              obj.get('device_ID') + '/' + obj.get('User') + '/' +
-                             feature.properties.link1_href + "'/>");
+                             feature.properties.link + "'/>");
              break;
            default:
              layer.bindPopup(feature.properties.name);
