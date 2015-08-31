@@ -1,7 +1,7 @@
 #map {
     height: 100vh;
-    top:-32px;
     margin-left:15px;
+    top:-30px;
 }
 
 #content {
@@ -18,7 +18,7 @@
 }
 
 .img-responsive {
-  height: 13vw;
+  height: 30vw;
 }
 
 .upload-flash {
@@ -46,7 +46,7 @@
     -ms-transform: translateZ(0);
     transform: translateZ(0);
     margin-right: -250px;
-    right: 5px;
+    right: 15px;
     margin-top: 50px;
     width: 270px;
     background: rgba(240, 240, 240, 0.5);

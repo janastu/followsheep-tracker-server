@@ -11,4 +11,4 @@ sys.path.insert(0, BASE_DIR)
 from emule import app as application
 
 if __name__ == "__main__":
-    application.run('localhost', 5000, True)
+    application.run('0.0.0.0', 5000, True)

@@ -15,6 +15,9 @@
     <nav class="navbar navbar-inverse navbar-fixed-top row" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
+            <a href="/"  ><img src="static/images/logo.png"
+            alt="sheep-logo"  style="width:auto;
+            height:45px; padding:2px;"/></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -23,20 +26,20 @@
           </button>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-            <a href="/" data-toggle="tooltip"
-                        title="See tracks"
-                        data-placement="bottom" ><img
-                        src="static/images/logo.png"
-                        alt="sheep-logo"  style="width:auto;
-                        height:45px; padding:5px;"/></a>
             <!-- Single button -->
-            <div class="btn-group">
+            <div class="btn-group" data-toggle="popover"
+                            data-container="body"
+                            title="Upload tracks"
+                            data-content="You can upload tracks collected
+                            from Baa android app. export files as .zip
+                            from your phone and upload here!"
+                            data-placement="bottom">
                 <button type="button" class="btn 
                 dropdown-toggle" data-toggle="dropdown"
                                  aria-haspopup="true"
                                  aria-expanded="false"
                                  style="background-color:transparent;
-                                 color:#fff;">
+                                 color:#fff; padding:11px;">
                     Upload <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -53,6 +56,14 @@
                     </li>
                 </ul>
             </div>
+                <div class="pull-right">
+                <button type="button" class="btn" style="background-color:transparent;
+                                 color:#fff; padding: 11px;">
+                    <a style="color:#fff; text-decoration: none;"
+                    href="http://janastu.org/apps/baaapp/userdoc.html"
+                    />Documentation</a>
+                </button>
+                </div>
 
         </div><!--/.nav-collapse -->
       </div>
@@ -78,7 +89,13 @@
         <div class="sidebar-wrapper">
             <div class="row">
                 <div class="side-menu-heading">
-                    <a class="menu-toggle" href="#">
+                    <a class="menu-toggle" data-toggle="popover"
+                            data-container="body"
+                            title="Tracks List"
+                            data-content="Here you can see the list of
+                            tracks uploaded on server. click on the
+                            track to see plots on map."
+                            data-placement="left" href="#">
                         <span class="glyphicon glyphicon-align-justify
                         "></span>
                     </a>

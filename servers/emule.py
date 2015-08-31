@@ -1,12 +1,14 @@
 from app import create_app
 from flask import (render_template, request, redirect,
-                   url_for, flash, make_response, send_from_directory)
+                   url_for, flash, make_response, send_from_directory, Response)
 from flaskext.uploads import (UploadSet, configure_uploads, ARCHIVES,
                               UploadConfiguration)
 from flask.ext.pymongo import PyMongo
 import json
 import os
 import zipfile
+from functools import wraps
+
 
 app = create_app()
 
@@ -21,6 +23,30 @@ uploaded_files._config = UploadConfiguration(UPLOAD_DEST)
 configure_uploads(app, uploaded_files)
 mongo = PyMongo(app)
 
+def check_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    users = app.config.get('USERS')
+    passkey = app.config.get('SECRET')[0]
+    if username in users and passkey == password:
+        return username 
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 @app.route('/')
 def index():
@@ -28,6 +54,7 @@ def index():
 
 
 @app.route('/upload', methods=['POST', 'GET'])
+@requires_auth
 def upload():
     if request.method == "POST":
         filename = uploaded_files.save(request.files.get('track'))

@@ -52,30 +52,32 @@ window.App = window.App || {};
        }
      },
      loadTrack: function(track, obj) {
-       // the track gets visualized on the map.
-       App.addedTrack = L.geoJson(track, {
-         style: function(feature) {
-           return {color: 'red'};
-         },
-         onEachFeature: function(feature, layer) {
-           switch(feature.properties.name) {
-           case 'Picture':
-             layer.bindPopup("<img class='img-responsive' src='static/data/extracted_data/" +
-                             obj.get('device_ID') + '/' + obj.get('User') + '/' +
-                             feature.properties.link + "'/>");
-             break;
-           case 'Voice recording':
-             layer.bindPopup("<audio controls='controls' src='static/data/extracted_data/" +
-                             obj.get('device_ID') + '/' + obj.get('User') + '/' +
-                             feature.properties.link1_href + "'/>");
-             break;
-           default:
-             layer.bindPopup(feature.properties.name);
-             break;
-           }
-         }
-       }).addTo(App.map);
-       App.map.fitBounds(App.addedTrack.getBounds());
+         // the track gets visualized on the map.
+         App.addedTrack = L.geoJson(track, {
+             style: function(feature) {
+                 return {color: 'red'};
+             },
+             onEachFeature: function(feature, layer) {
+
+                 switch(feature.properties.name) {
+                     case 'Picture':
+                         
+                         layer.bindPopup("<img class='img-responsive' src='static/data/extracted_data/" +
+                                 obj.get('device_ID') + '/' + obj.get('User') + '/' +
+                                 feature.properties.link + "'/>");
+                         break;
+                     case 'Voice recording':
+                         layer.bindPopup("<audio controls='controls' src='static/data/extracted_data/" +
+                                 obj.get('device_ID') + '/' + obj.get('User') + '/' +
+                                 feature.properties.link1_href + "'/>");
+                         break;
+                     default:
+                         layer.bindPopup(feature.properties.name);
+                         break;
+                 }
+             }
+         }).addTo(App.map);
+         App.map.fitBounds(App.addedTrack.getBounds());
      }
    });
 
