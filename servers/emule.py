@@ -4,6 +4,7 @@ from flask import (render_template, request, redirect,
 from flaskext.uploads import (UploadSet, configure_uploads, ARCHIVES,
                               UploadConfiguration)
 from flask.ext.pymongo import PyMongo
+import hashlib
 import subprocess
 import json
 import os
@@ -32,13 +33,19 @@ def index():
 def upload():
     if request.method == "POST":
         filename = uploaded_files.save(request.files.get('track'))
-        extract_file(filename)
+        hash = hashlib.md5()
+        for chunk in iter(lambda: request.files.get('track').read(4096), ""):
+            hash.update(chunk)
+        if mongo.db.tracks.find_one({'checksum': hash.hexdigest()}):
+            flash('Duplicate file!!.')
+            return redirect(url_for('index'))
+        extract_file(filename, hash.hexdigest())
         flash('Your upload was successful.')
         return redirect(url_for('index'))
     return render_template('upload.html')
 
 
-def extract_file(name):
+def extract_file(name, checksum):
     """TODO: Insert assertions for error handling."""
     """Extract the zip and save the contents of the zip into a directory
     organized by username in the config file."""
@@ -58,11 +65,12 @@ def extract_file(name):
                                                     files.filename))
                 config['track-path'] = url
                 config['track-name'] = files.filename.rstrip('.gpx')
-        subprocess.Popen([os.path.abspath(os.path.join(
+        subprocess.Popen(['bash', os.path.abspath(os.path.join(
             os.path.dirname(__file__), os.pardir, 'scripts', 'convert.sh')),
                          os.path.join(UPLOAD_DEST, 'extracted_data',
                                       config.get('Device ID'),
                                       config.get('User'))])
+    config['checksum'] = checksum
     mongo.db.tracks.save(config)
     return True
 

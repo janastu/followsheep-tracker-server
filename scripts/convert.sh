@@ -1,4 +1,3 @@
-# !/usr/bin/env bash
 cd $1
 if command -v avconv 2> /dev/null; then
     for i in *.3gpp ; do
