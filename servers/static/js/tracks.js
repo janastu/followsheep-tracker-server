@@ -30,10 +30,14 @@ window.App = window.App || {};
        if(!(track)) {
          $.ajax({url: obj[0].get('track-path')}).done(function(data) {
            // load the geoJSON on the map
-
-           var jsonTrack = toGeoJSON.gpx(
-             (new DOMParser()).parseFromString(data, 'text/xml'));
-
+           var jsonTrack = '';
+           if(typeof data == "string") {
+             jsonTrack = toGeoJSON.gpx(
+               (new DOMParser()).parseFromString(data, 'text/xml'));
+           }
+           else  {
+             jsonTrack = toGeoJSON.gpx(data);
+           }
            that.loadTrack(jsonTrack, obj[0]);
            // send the json to be cached on server
            // TODO: Add a error handler
