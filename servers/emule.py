@@ -1,9 +1,10 @@
 from app import create_app
 from flask import (render_template, request, redirect,
-                   url_for, flash, make_response, send_from_directory)
+                   url_for, flash, make_response)
 from flaskext.uploads import (UploadSet, configure_uploads, ARCHIVES,
                               UploadConfiguration)
 from flask.ext.pymongo import PyMongo
+import subprocess
 import json
 import os
 import zipfile
@@ -40,8 +41,7 @@ def upload():
 def extract_file(name):
     """TODO: Insert assertions for error handling."""
     """Extract the zip and save the contents of the zip into a directory
-    organized by username in the config file.
-    Save the GeoJSON output of the gpx in a mongo db instance."""
+    organized by username in the config file."""
     with zipfile.ZipFile(os.path.join(UPLOAD_DEST, name)) as zipF:
         with zipF.open('config.json') as f:
             config = json.load(f)
@@ -58,6 +58,11 @@ def extract_file(name):
                                                     files.filename))
                 config['track-path'] = url
                 config['track-name'] = files.filename.rstrip('.gpx')
+        subprocess.Popen([os.path.abspath(os.path.join(
+            os.path.dirname(__file__), os.pardir, 'scripts', 'convert.sh')),
+                         os.path.join(UPLOAD_DEST, 'extracted_data',
+                                      config.get('Device ID'),
+                                      config.get('User'))])
     mongo.db.tracks.save(config)
     return True
 
@@ -80,9 +85,3 @@ def upload_track(id):
         'track': json.loads(request.form.get('track'))}})
     response = make_response()
     return response
-
-
-@app.route('/static/<path:filename>')
-def serve_gpx(filename):
-    return send_from_directory(app.static_folder, filename,
-                               mimetype="application/gpx+xml")
