@@ -25,6 +25,7 @@ uploaded_files._config = UploadConfiguration(UPLOAD_DEST)
 configure_uploads(app, uploaded_files)
 mongo = PyMongo(app)
 
+
 def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
@@ -32,14 +33,16 @@ def check_auth(username, password):
     users = app.config.get('USERS')
     passkey = app.config.get('SECRET')[0]
     if username in users and passkey == password:
-        return username 
+        return username
+
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
-    'Could not verify your access level for that URL.\n'
-    'You have to login with proper credentials', 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
 
 def requires_auth(f):
     @wraps(f)
@@ -49,6 +52,7 @@ def requires_auth(f):
             return authenticate()
         return f(*args, **kwargs)
     return decorated
+
 
 @app.route('/')
 def index():
