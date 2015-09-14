@@ -65,10 +65,12 @@ def upload():
     if request.method == "POST":
         filename = uploaded_files.save(request.files.get('track'))
         hash = hashlib.md5()
-        for chunk in iter(lambda: request.files.get('track').read(4096), ""):
+        fObject = open(os.path.join(UPLOAD_DEST, filename), 'r')
+        for chunk in iter(lambda: fObject.read(
+                4096), ""):
             hash.update(chunk)
         if mongo.db.tracks.find_one({'checksum': hash.hexdigest()}):
-            flash('Duplicate file!!.')
+            flash('Duplicate file!!')
             return redirect(url_for('index'))
         extract_file(filename, hash.hexdigest())
         flash('Your upload was successful.')
@@ -81,7 +83,13 @@ def extract_file(name, checksum):
     """Extract the zip and save the contents of the zip into a directory
     organized by username in the config file."""
     with zipfile.ZipFile(os.path.join(UPLOAD_DEST, name)) as zipF:
-        with zipF.open('config.json') as f:
+        for fileName in zipF.infolist():
+            if fileName.filename.endswith('.json'):
+                configFilePath = fileName.filename
+                break
+        if configFilePath.find('/'):
+            configDirName = configFilePath.split('/')[0]
+        with zipF.open(configFilePath) as f:
             config = json.load(f)
             zipF.extractall(os.path.join(UPLOAD_DEST, 'extracted_data',
                                          config.get('Device ID'),
@@ -95,12 +103,19 @@ def extract_file(name, checksum):
                                                     config.get('User'),
                                                     files.filename))
                 config['track-path'] = url
-                config['track-name'] = files.filename.rstrip('.gpx')
+                config['track-name'] = files.filename.rstrip('.gpx').split(
+                    '/')[-1]
+        try:
+            dirPath = configDirName
+        except NameError:
+            dirPath = ''
         subprocess.Popen(['bash', os.path.abspath(os.path.join(
             os.path.dirname(__file__), os.pardir, 'scripts', 'convert.sh')),
                          os.path.join(UPLOAD_DEST, 'extracted_data',
                                       config.get('Device ID'),
-                                      config.get('User'))])
+                                      config.get('User'),
+                                      dirPath)])
+    config['data-path'] = config.get('track-path').rsplit('/', 1)[0]
     config['checksum'] = checksum
     mongo.db.tracks.save(config)
     return True
