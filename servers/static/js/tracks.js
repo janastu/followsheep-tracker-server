@@ -57,10 +57,23 @@ window.App = window.App || {};
      },
      loadTrack: function(track, obj) {
        // the track gets visualized on the map.
+       coords = [];
        App.addedTrack = L.geoJson(track, {
          style: function(feature) {
-           return {color: 'red'};
+           return {
+		color: 'red',
+		};
          },
+	 pointToLayer: function(feature,latlng){
+           switch(feature.properties.name) {
+           case 'Picture':
+		return L.marker(latlng, {icon:App.pictureIcon});
+	   case 'Voice recording':
+		return L.marker(latlng,{icon:audioIcon});
+	   default:
+		return L.marker(latlng,{icon:textIcon});
+           }		
+	 },
          onEachFeature: function(feature, layer) {
            switch(feature.properties.name) {
            case 'Picture':
@@ -69,13 +82,17 @@ window.App = window.App || {};
              break;
            case 'Voice recording':
              layer.bindPopup("<audio controls='controls' src=" + obj.get('data-path')+ '/' +
-                             feature.properties.link + ".mp3" + "'/>");
+                             feature.properties.link + ".mp3" + "/>");
              break;
            default:
              layer.bindPopup(feature.properties.name);
              break;
            }
-         }
+		coords.push([feature.geometry.coordinates[1],feature.geometry.coordinates[0]]);
+         },
+	getLatLng: function (coords) {
+            return new L.heatLayer(coords);
+        }
        }).addTo(App.map);
        App.map.fitBounds(App.addedTrack.getBounds());
      }

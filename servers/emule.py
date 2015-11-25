@@ -60,7 +60,7 @@ def index():
 
 
 @app.route('/upload', methods=['POST', 'GET'])
-@requires_auth
+#@requires_auth
 def upload():
     if request.method == "POST":
         filename = uploaded_files.save(request.files.get('track'))
