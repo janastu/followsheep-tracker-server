@@ -10,6 +10,7 @@ window.App = window.App || {};
        // set the collection and call render
        this.collection = options['collection'];
        this.template = _.template($("#tracks-template").html());
+       this.listenTo(App.Router, "route", this.initTrack);
        this.render();
      },
      render: function() {
@@ -18,10 +19,21 @@ window.App = window.App || {};
        }, this);
      },
      onTrackClick: function(event) {
+       var routeFragment = "#track/"+$(event.currentTarget).attr('id');
+       App.Router.navigate(routeFragment, {trigger: true});
+     },
+     initTrack: function(){
        if(App.map.hasLayer(App.addedTrack)) {
          App.map.removeLayer(App.addedTrack);
        }
-       var obj = this.collection.where({'id': $(event.currentTarget).attr('id')});
+       console.log(Backbone.history.getFragment().split('/')[1]);
+       /*if(event){
+         var obj = this.collection.where({'id': $(event.currentTarget).attr('id')});
+       } else {
+         var obj = this.collection.where({'id': Backbone.history.getFragment().split('/')[1]});
+       }*/
+       var obj = this.collection.where({'id': Backbone.history.getFragment().split('/')[1]});
+       
        var track = obj[0].get('track');
        // if there is no attribute called track, then generate the track
        // and then push it to the server to be stored.
@@ -106,5 +118,20 @@ window.App = window.App || {};
        this.set({'view': new tracksView({'collection': this})});
      }
    });
+
+
+   var router = Backbone.Router.extend({
+     routes: {
+         "track/:id": "loadTrack"  
+     },
+
+     loadTrack: function(id) {
+       console.log("loading track..");
+
+     }
+   });
+
+   App.Router = new router();
+   Backbone.history.start({pushState: true});
  }
 )(window.jQuery, window.Backbone, window._, window.L, window.App);
