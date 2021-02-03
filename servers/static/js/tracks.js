@@ -17,16 +17,21 @@ window.App = window.App || {};
        _.each(this.collection.models, function(val, key) {
          $(this.el).append(this.template(val.toJSON()));
        }, this);
+
+       var routeFragment = Backbone.history.getFragment();
+       if(routeFragment.split('/')[1]) {
+         this.initTrack();
+       }
      },
      onTrackClick: function(event) {
-       var routeFragment = "#track/"+$(event.currentTarget).attr('id');
+       var routeFragment = "#/track/"+$(event.currentTarget).attr('id');
        App.Router.navigate(routeFragment, {trigger: true});
      },
      initTrack: function(){
        if(App.map.hasLayer(App.addedTrack)) {
          App.map.removeLayer(App.addedTrack);
        }
-       console.log(Backbone.history.getFragment().split('/')[1]);
+       
        /*if(event){
          var obj = this.collection.where({'id': $(event.currentTarget).attr('id')});
        } else {
@@ -66,8 +71,8 @@ window.App = window.App || {};
        else {
          this.loadTrack(track, obj[0]);
        }
-     },
-     loadTrack: function(track, obj) {
+   },
+   loadTrack: function(track, obj) {
        // the track gets visualized on the map.
        coords = [];
        App.addedTrack = L.geoJson(track, {
@@ -75,7 +80,7 @@ window.App = window.App || {};
            return {
 		color: 'red',
 		};
-         },
+   },
 	 pointToLayer: function(feature,latlng){
            switch(feature.properties.name) {
            case 'Picture':
@@ -86,22 +91,22 @@ window.App = window.App || {};
 		return L.marker(latlng,{icon:textIcon});
            }		
 	 },
-         onEachFeature: function(feature, layer) {
-           switch(feature.properties.name) {
-           case 'Picture':
-             layer.bindPopup("<img class='img-responsive' src=" + obj.get('data-path') + '/' +
-                             feature.properties.link + "/>");
-             break;
-           case 'Voice recording':
-             layer.bindPopup("<audio controls='controls' src=" + obj.get('data-path')+ '/' +
-                             feature.properties.link + ".mp3" + "/>");
-             break;
-           default:
-             layer.bindPopup(feature.properties.name);
-             break;
-           }
-		coords.push([feature.geometry.coordinates[1],feature.geometry.coordinates[0]]);
-         },
+  onEachFeature: function(feature, layer) {
+     switch(feature.properties.name) {
+     case 'Picture':
+       layer.bindPopup("<img class='img-responsive' src=" + obj.get('data-path') + '/' +
+                       feature.properties.link + "/>");
+       break;
+     case 'Voice recording':
+       layer.bindPopup("<audio controls='controls' src=" + obj.get('data-path')+ '/' +
+                       feature.properties.link + ".mp3" + "/>");
+       break;
+     default:
+       layer.bindPopup(feature.properties.name);
+       break;
+     }
+     coords.push([feature.geometry.coordinates[1],feature.geometry.coordinates[0]]);
+  },
 	getLatLng: function (coords) {
             return new L.heatLayer(coords);
         }
@@ -123,15 +128,10 @@ window.App = window.App || {};
    var router = Backbone.Router.extend({
      routes: {
          "track/:id": "loadTrack"  
-     },
-
-     loadTrack: function(id) {
-       console.log("loading track..");
-
      }
    });
 
    App.Router = new router();
-   Backbone.history.start({pushState: true});
+   Backbone.history.start();
  }
 )(window.jQuery, window.Backbone, window._, window.L, window.App);
