@@ -94,7 +94,8 @@ window.App = window.App || {};
   onEachFeature: function(feature, layer) {
      switch(feature.properties.name) {
      case 'Picture':
-       layer.bindPopup("<a target='_blank' href=" + obj.get('data-path') + "><img class='img-responsive' src=" + obj.get('data-path') + '/' +
+       layer.bindPopup("<a target='_blank' href=" + obj.get('data-path') + '/' +
+                       feature.properties.link +"><img class='img-responsive' src=" + obj.get('data-path') + '/' +
                        feature.properties.link + "/></a>");
        break;
      case 'Voice recording':
